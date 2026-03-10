@@ -5,10 +5,10 @@
 
 ## 🚀 Tech Stack
 
-**- Backend**: Laravel 12
-**- Frontend**: React (Vite)
-**- Database**: PostgreSQL
-**- Version Control**: Git & GitHub
+- **Backend**: Laravel 12
+- **Frontend**: React (Vite)
+- **Database**: PostgreSQL
+- **Version Control**: Git & GitHub
 
 ---
 
