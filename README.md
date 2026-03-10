@@ -1,9 +1,6 @@
 # CAKRA
 (JPP Project)
 
-CAKRA adalah aplikasi berbasis web yang dikembangkan untuk mendukung kebutuhan sistem pada **JPP Project**.  
-Aplikasi ini dibangun menggunakan arsitektur modern dengan pemisahan antara backend dan frontend untuk memudahkan pengembangan serta kolaborasi tim.
-
 ---
 
 ## 🚀 Tech Stack
