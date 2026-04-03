@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { Link, usePage } from '@inertiajs/react';
 import { BellIcon, ChevronDownIcon, UserCircleIcon, Cog6ToothIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { Link, usePage } from '@inertiajs/react';
+import { useState, useRef, useEffect } from 'react';
 import AppLayout from '@/layouts/app-layout';
 
 interface NavbarProps {

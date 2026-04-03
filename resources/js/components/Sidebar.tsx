@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-import { Link, usePage } from '@inertiajs/react';
 import {
     ChartPieIcon,
     WrenchScrewdriverIcon,
@@ -10,6 +8,8 @@ import {
     ChevronDownIcon,
     // ChevronUpIcon,
 } from '@heroicons/react/24/outline';
+import { Link, usePage } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
 
 // Ganti dengan path logo kamu
 import logo from '@/assets/images/cakra logo.png';

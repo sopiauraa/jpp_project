@@ -1,6 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import AppLayout from "@/layouts/app-layout";
 import { useState } from "react";
+import AppLayout from "@/layouts/app-layout";
 import AddModalLOP from "@/pages/admin/AddModalLOP";
 
 export default function ManagementPT3() {

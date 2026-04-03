@@ -1,7 +1,7 @@
+import { usePage } from '@inertiajs/react';
+import type { PropsWithChildren } from 'react';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
-import { usePage } from '@inertiajs/react';
-import { PropsWithChildren } from 'react';
 
 interface Props {
     title?: string;
