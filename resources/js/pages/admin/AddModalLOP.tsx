@@ -245,17 +245,16 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                     )}
 
                     {/* Step 3 — Progres LOP */}
-                    {currentStep === 2 && (
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                        <div className="min-w-0"><label className={labelClass}>Status</label><Dropdown value={form.status} onChange={set("status")} options={["GoLive","On Progress","Hold"]} placeholder="Pilih status" /></div>
-                        <div className="min-w-0"><label className={labelClass}>Kendala Golive</label><textarea name="kendalaGolive" value={form.kendalaGolive} onChange={handleChange} rows={3} className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none transition" /></div>
-                        <div className="min-w-0"><label className={labelClass}>Sub status</label><Dropdown value={form.subStatus} onChange={set("subStatus")} options={["Sub 1","Sub 2","Sub 3"]} placeholder="Pilih sub status" /></div>
-                        <div className="min-w-0"><label className={labelClass}>Tgl Golive</label><input type="date" name="tglGolive" value={form.tglGolive} onChange={handleChange} className={inputClass} /></div>
-                        <div className="min-w-0"><label className={labelClass}>Detail Status</label><textarea name="detailStatus" value={form.detailStatus} onChange={handleChange} rows={3} className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none transition" /></div>
-                        <div className="min-w-0"><label className={labelClass}>Tanggal arge golive</label><Dropdown value={form.tanggalArgeGolive} onChange={set("tanggalArgeGolive")} placeholder="Pilih bulan" options={["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"]} /></div>
-                      </div>
-                    )}
-
+             {currentStep === 2 && (
+  <div className="grid grid-cols-2 gap-x-6 gap-y-3 items-start">
+    <div className="min-w-0"><label className={labelClass}>Status</label><Dropdown value={form.status} onChange={set("status")} options={["GoLive","On Progress","Hold"]} placeholder="Pilih status" /></div>
+    <div className="min-w-0"><label className={labelClass}>Kendala Golive</label><textarea name="kendalaGolive" value={form.kendalaGolive} onChange={handleChange} rows={3} className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none transition" /></div>
+    <div className="min-w-0 mt-[-40px]"><label className={labelClass}>Sub status</label><Dropdown value={form.subStatus} onChange={set("subStatus")} options={["Sub 1","Sub 2","Sub 3"]} placeholder="Pilih sub status" /></div>
+    <div className="min-w-0"><label className={labelClass}>Tgl Golive</label><input type="date" name="tglGolive" value={form.tglGolive} onChange={handleChange} className={inputClass} /></div>
+    <div className="min-w-0 mt-[-40px]"><label className={labelClass}>Detail Status</label><textarea name="detailStatus" value={form.detailStatus} onChange={handleChange} rows={3} className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none transition" /></div>
+    <div className="min-w-0"><label className={labelClass}>Tanggal arge golive</label><Dropdown value={form.tanggalArgeGolive} onChange={set("tanggalArgeGolive")} placeholder="Pilih bulan" options={["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"]} /></div>
+  </div>
+)}
                     {/* Step 4 — Identitas OLT
                         Layout 2 kolom:
                         Kolom kiri : PID | ID SW ABD | Real JML ODP 8
