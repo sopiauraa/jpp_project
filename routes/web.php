@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/admin/ExclusiveReports', function () { return Inertia::render('admin/ExclusiveReports');});
 Route::get('/admin/DashboardPT3', function () { return Inertia::render('admin/DashboardPT3');});
 Route::get('/admin/ManagementPT3', function () { return Inertia::render('admin/ManagementPT3');});
+Route::get('/admin/DetailLOP', function () { return Inertia::render('admin/DetailLOP');});
 Route::get('/admin/EvalSubconPT3', function () { return Inertia::render('admin/EvalSubconPT3');});
 Route::get('/admin/DashboardPT2', function () { return Inertia::render('admin/DashboardPT2');});
 Route::get('/admin/ManagementPT2', function () { return Inertia::render('admin/ManagementPT2');});
