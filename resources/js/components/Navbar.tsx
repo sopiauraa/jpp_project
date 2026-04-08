@@ -29,13 +29,13 @@ export default function Navbar({ title }: NavbarProps) {
         ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=7c3aed&color=fff&bold=true`;
 
     return (
-        <header className="h-16 bg-white border-b border-gray-100 px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-gray-100 px-6 pl-16 lg:pl-6 flex items-center justify-between sticky top-0 z-30">
 
             {/* Judul Halaman */}
-            <h1 className="text-xl font-bold text-gray-900">{title}</h1>
+            <h1 className="text-base lg:text-xl font-bold text-gray-900 truncate max-w-[160px] sm:max-w-xs lg:max-w-none">{title}</h1>
 
             {/* Kanan */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 lg:gap-3">
 
                 {/* Notifikasi — klik ke halaman notifikasi */}
                 <Link

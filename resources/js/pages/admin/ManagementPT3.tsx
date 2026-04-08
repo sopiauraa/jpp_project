@@ -3,7 +3,6 @@ import { useState } from "react";
 import AppLayout from "@/layouts/app-layout";
 import AddModalLOP from "@/pages/admin/AddModalLOP";
 
-// ✅ Tipe data — nanti tinggal sesuaikan sama response API
 interface LOPItem {
     region: string;
     distrik: string;
@@ -15,7 +14,6 @@ interface LOPItem {
     subStatus: string;
 }
 
-// ✅ Dummy data — nanti hapus ini & ganti dengan usePage().props
 const dummyData: LOPItem[] = [
     {
         region: 'SUMBAGUT',
@@ -48,7 +46,7 @@ export default function ManagementPT3() {
     return (
         <>
             <AppLayout title="Manajemen PT3">
-                <div className="min-h-screen bg-gray-100 p-6">
+                <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
 
                     {/* Page Title */}
                     <h1 className="text-2xl font-bold text-gray-800 mb-6">
@@ -56,10 +54,10 @@ export default function ManagementPT3() {
                     </h1>
 
                     {/* Card */}
-                    <div className="bg-white p-6 rounded-xl shadow">
+                    <div className="bg-white p-4 sm:p-6 rounded-xl shadow">
 
                         {/* Toolbar */}
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
 
                             {/* Show X entries */}
                             <div className="flex items-center gap-2 text-sm text-gray-600 shrink-0">
@@ -103,7 +101,7 @@ export default function ManagementPT3() {
                             {/* Buat LOP Button */}
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="flex items-center gap-2 px-5 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium shrink-0"
+                                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium shrink-0"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -113,78 +111,80 @@ export default function ManagementPT3() {
                         </div>
 
                         {/* Table */}
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm border-separate" style={{ borderSpacing: '0 8px' }}>
-                                <thead>
-                                    <tr className="bg-violet-600 text-white">
-                                        <th className="px-4 py-1 text-center font-medium rounded-l-sm">Region FMC</th>
-                                        <th className="px-4 py-1 text-center font-medium">Distrik</th>
-                                        <th className="px-4 py-1 text-center font-medium">IHLD</th>
-                                        <th className="px-4 py-1 text-center font-medium">LOP</th>
-                                        <th className="px-4 py-1 text-center font-medium">Batch Program</th>
-                                        <th className="px-4 py-1 text-center font-medium">Nilai BOQ</th>
-                                        <th className="px-4 py-1 text-center font-medium">Status</th>
-                                        <th className="px-4 py-1 text-center font-medium">Sub Status</th>
-                                        <th className="px-4 py-1 text-center font-medium rounded-r-sm">Detail LOP</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filtered.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={9} className="text-center py-10 text-gray-400 text-sm">
-                                                Tidak ada data yang cocok dengan pencarian.
-                                            </td>
+                        <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <div className="min-w-[700px] px-4 sm:px-0">
+                                <table className="w-full text-sm border-separate" style={{ borderSpacing: '0 8px' }}>
+                                    <thead>
+                                        <tr className="bg-violet-600 text-white">
+                                            <th className="px-4 py-1 text-center font-medium rounded-l-sm whitespace-nowrap">Region FMC</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">Distrik</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">IHLD</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">LOP</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">Batch Program</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">Nilai BOQ</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">Status</th>
+                                            <th className="px-4 py-1 text-center font-medium whitespace-nowrap">Sub Status</th>
+                                            <th className="px-4 py-1 text-center font-medium rounded-r-sm whitespace-nowrap">Detail LOP</th>
                                         </tr>
-                                    ) : (
-                                        filtered.map((row, i) => (
-                                            <tr key={i} className="bg-white">
-                                                <td className="px-4 py-4 text-center text-gray-700 font-medium border-y border-l border-gray-100 rounded-l-sm">
-                                                    {row.region}
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
-                                                    {row.distrik}
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
-                                                    {row.ihld}
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100 text-xs leading-relaxed">
-                                                    {row.lop}
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
-                                                    {row.batch}
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
-                                                    {row.nilaiBoq}
-                                                </td>
-                                                <td className="px-4 py-4 text-center border-y border-gray-100">
-                                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                                        row.status === 'GoLive'
-                                                            ? 'bg-green-100 text-green-600'
-                                                            : row.status === 'Inactive'
-                                                            ? 'bg-gray-100 text-gray-500'
-                                                            : 'bg-yellow-100 text-yellow-600'
-                                                    }`}>
-                                                        {row.status}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100 text-xs">
-                                                    {row.subStatus}
-                                                </td>
-                                                <td className="px-4 py-4 text-center border-y border-r border-gray-100 rounded-r-sm">
-                                                    <Link
-                                                        href="/admin/DetailLOP"
-                                                        className="p-1.5 rounded-lg bg-violet-500 hover:bg-violet-600 text-white transition-colors inline-flex"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                                        </svg>
-                                                    </Link>
+                                    </thead>
+                                    <tbody>
+                                        {filtered.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={9} className="text-center py-10 text-gray-400 text-sm">
+                                                    Tidak ada data yang cocok dengan pencarian.
                                                 </td>
                                             </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
+                                        ) : (
+                                            filtered.map((row, i) => (
+                                                <tr key={i} className="bg-white">
+                                                    <td className="px-4 py-4 text-center text-gray-700 font-medium border-y border-l border-gray-100 rounded-l-sm">
+                                                        {row.region}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
+                                                        {row.distrik}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
+                                                        {row.ihld}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100 text-xs leading-relaxed">
+                                                        {row.lop}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
+                                                        {row.batch}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
+                                                        {row.nilaiBoq}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center border-y border-gray-100">
+                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                                            row.status === 'GoLive'
+                                                                ? 'bg-green-100 text-green-600'
+                                                                : row.status === 'Inactive'
+                                                                ? 'bg-gray-100 text-gray-500'
+                                                                : 'bg-yellow-100 text-yellow-600'
+                                                        }`}>
+                                                            {row.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100 text-xs">
+                                                        {row.subStatus}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-center border-y border-r border-gray-100 rounded-r-sm">
+                                                        <Link
+                                                            href="/admin/DetailLOP"
+                                                            className="p-1.5 rounded-lg bg-violet-500 hover:bg-violet-600 text-white transition-colors inline-flex"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                                            </svg>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
 
                             {/* Pagination */}
                             <div className="flex items-center justify-center gap-1.5 py-4">

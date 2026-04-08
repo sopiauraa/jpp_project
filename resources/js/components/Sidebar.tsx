@@ -6,8 +6,9 @@ import {
     Cog6ToothIcon,
     ArrowLeftStartOnRectangleIcon,
     ChevronDownIcon,
-    ChevronDoubleLeftIcon,
     ChevronDoubleRightIcon,
+    Bars3Icon,
+    XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
@@ -51,11 +52,16 @@ const menuItems = [
 export default function Sidebar() {
     const { url } = usePage();
 
+    // Desktop: collapsed/expanded state
     const [collapsed, setCollapsed] = useState(() => {
+        if (typeof window === 'undefined') return false;
         const saved = localStorage.getItem('sidebar-collapsed');
         if (saved !== null) return saved === 'true';
         return window.innerWidth < 1024;
     });
+
+    // Mobile: drawer open/close state
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     const [openMenus, setOpenMenus] = useState<string[]>(() =>
         menuItems
@@ -67,20 +73,15 @@ export default function Sidebar() {
     );
 
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 1024) {
-                setCollapsed(true);
-                localStorage.setItem('sidebar-collapsed', 'true');
-            }
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
         localStorage.setItem('sidebar-collapsed', String(collapsed));
     }, [collapsed]);
 
+    // Tutup drawer kalau navigasi ke halaman lain
+    useEffect(() => {
+        setMobileOpen(false);
+    }, [url]);
+
+    // Sync active parent menu saat url berubah
     useEffect(() => {
         const activeParents = menuItems
             .filter(item =>
@@ -91,6 +92,16 @@ export default function Sidebar() {
         setOpenMenus(prev => [...new Set([...prev, ...activeParents])]);
     }, [url]);
 
+    // Prevent body scroll saat drawer mobile buka
+    useEffect(() => {
+        if (mobileOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [mobileOpen]);
+
     const toggleMenu = (label: string) => {
         setOpenMenus(prev =>
             prev.includes(label) ? prev.filter(m => m !== label) : [...prev, label]
@@ -99,26 +110,9 @@ export default function Sidebar() {
 
     const isActive = (href: string) => url.startsWith(href);
 
-    return (
-        <aside
-            style={{ transition: 'width 350ms cubic-bezier(0.4, 0, 0.2, 1)' }}
-            className={`relative h-screen bg-white border-r border-gray-100 flex flex-col py-5 ${
-                collapsed ? 'w-16 px-2' : 'w-56 px-3'
-            }`}
-        >
-            {/* Toggle Button */}
-            <button
-                onClick={() => setCollapsed(prev => !prev)}
-                className="absolute -right-3 top-6 z-10 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-violet-50 hover:border-violet-300 transition-all duration-200"
-            >
-                <span
-                    style={{ transition: 'transform 350ms cubic-bezier(0.4, 0, 0.2, 1)' }}
-                    className={`flex items-center justify-center ${collapsed ? 'rotate-0' : 'rotate-180'}`}
-                >
-                    <ChevronDoubleRightIcon className="w-3 h-3 text-gray-500" />
-                </span>
-            </button>
-
+    // Konten sidebar (dipakai ulang untuk desktop & mobile drawer)
+    const SidebarContent = ({ onLinkClick }: { onLinkClick?: () => void }) => (
+        <>
             {/* Logo */}
             <div className={`flex items-center mb-8 overflow-hidden ${collapsed ? 'justify-center' : 'gap-2.5 px-2'}`}>
                 <img
@@ -147,13 +141,12 @@ export default function Sidebar() {
 
                     return (
                         <div key={item.label}>
-
-                            {/* Menu Item */}
                             <Link
                                 href={item.href}
                                 title={collapsed ? item.label : undefined}
                                 onClick={() => {
                                     if (hasChildren) toggleMenu(item.label);
+                                    onLinkClick?.();
                                 }}
                                 className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 ${
                                     collapsed ? 'justify-center' : 'justify-between'
@@ -166,7 +159,6 @@ export default function Sidebar() {
                                 <div className="relative flex items-center gap-2.5 min-w-0">
                                     <Icon className={`w-5 h-5 shrink-0 transition-transform duration-200 ${active ? 'scale-110' : 'scale-100'}`} />
 
-                                    {/* Dot penanda ada submenu saat collapsed */}
                                     {hasChildren && collapsed && (
                                         <span
                                             style={{ transition: 'transform 200ms ease, opacity 200ms ease' }}
@@ -209,6 +201,7 @@ export default function Sidebar() {
                                                 <Link
                                                     key={child.href}
                                                     href={child.href}
+                                                    onClick={onLinkClick}
                                                     className={`text-sm py-2 px-2 rounded-lg transition-all duration-200 ${
                                                         isActive(child.href)
                                                             ? 'text-violet-700 font-semibold bg-violet-50 translate-x-0.5'
@@ -239,6 +232,7 @@ export default function Sidebar() {
                                                     key={child.href}
                                                     href={child.href}
                                                     title={child.label}
+                                                    onClick={onLinkClick}
                                                     className="flex items-center justify-center w-full py-1 group"
                                                 >
                                                     <span
@@ -255,7 +249,6 @@ export default function Sidebar() {
                                     </div>
                                 </div>
                             )}
-
                         </div>
                     );
                 })}
@@ -281,6 +274,69 @@ export default function Sidebar() {
                     Keluar
                 </span>
             </Link>
-        </aside>
+        </>
+    );
+
+    return (
+        <>
+            {/* ─── MOBILE: Hamburger button (tampil di luar sidebar) ─── */}
+            <button
+                onClick={() => setMobileOpen(true)}
+                className="lg:hidden fixed top-16 left-2 z-40 w-9 h-9 bg-white border border-gray-200 rounded-lg flex items-center justify-center shadow-sm hover:bg-violet-50 transition-colors"
+                aria-label="Buka menu"
+            >
+                <Bars3Icon className="w-5 h-5 text-gray-600" />
+            </button>
+
+            {/* ─── MOBILE: Backdrop ─── */}
+            {mobileOpen && (
+                <div
+                    className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+                    onClick={() => setMobileOpen(false)}
+                />
+            )}
+
+            {/* ─── MOBILE: Drawer ─── */}
+            <aside
+                style={{ transition: 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                className={`lg:hidden fixed top-0 left-0 z-50 h-screen w-64 bg-white border-r border-gray-100 flex flex-col py-5 px-3 ${
+                    mobileOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}
+            >
+                {/* Tombol tutup drawer */}
+                <button
+                    onClick={() => setMobileOpen(false)}
+                    className="absolute top-4 right-3 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+                    aria-label="Tutup menu"
+                >
+                    <XMarkIcon className="w-4 h-4 text-gray-500" />
+                </button>
+
+                <SidebarContent onLinkClick={() => setMobileOpen(false)} />
+            </aside>
+
+            {/* ─── DESKTOP: Sidebar biasa (collapsed/expanded) ─── */}
+            <aside
+                style={{ transition: 'width 350ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                className={`fixed top-0 left-0 hidden lg:flex h-screen bg-white border-r border-gray-100 flex-col py-5 z-40 ${
+                    collapsed ? 'w-16 px-2' : 'w-56 px-3'
+                }`}
+            >
+                {/* Toggle Button */}
+                <button
+                    onClick={() => setCollapsed(prev => !prev)}
+                    className="absolute -right-3 top-6 z-10 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-violet-50 hover:border-violet-300 transition-all duration-200"
+                >
+                    <span
+                        style={{ transition: 'transform 350ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        className={`flex items-center justify-center ${collapsed ? 'rotate-0' : 'rotate-180'}`}
+                    >
+                        <ChevronDoubleRightIcon className="w-3 h-3 text-gray-500" />
+                    </span>
+                </button>
+
+                <SidebarContent />
+            </aside>
+        </>
     );
 }
