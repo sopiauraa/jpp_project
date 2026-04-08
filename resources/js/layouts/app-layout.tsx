@@ -13,7 +13,7 @@ export default function AppLayout({ children, title = 'Dashboard' }: PropsWithCh
             <Sidebar />
             <div className="flex-1 flex flex-col lg:ml-56">
                 <Navbar title={title} />
-                <main className="flex-1 p-6">
+                <main className="flex-1 overflow-auto">
                     {children}
                 </main>
             </div>
