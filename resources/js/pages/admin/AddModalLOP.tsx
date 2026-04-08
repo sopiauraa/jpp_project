@@ -349,7 +349,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
   }>({ open: false, target: null, value: "" });
 
   const [form, setForm] = useState({
-    tahun: "", distrik: "", idIhld: "", sto: "", namaLop: "",
+    tahun: "", idIhld: "", sto: "", namaLop: "",
     regionFmc: "", area: "", branchFmc: "", regionalTif: "Regional 1", batchProgram: "",
     namaMitra: "", boqPlan: "", subcon: "", cpp: "", waspang: "",
     odpPlan: "", projectAdmin: "", portPlan: "",
@@ -504,7 +504,6 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                     {currentStep === 0 && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><label className={labelClass}>Tahun</label><input name="tahun" value={form.tahun} onChange={handleChange} className={inputClass} /></div>
-                        <div><label className={labelClass}>Distrik</label><input name="distrik" value={form.distrik} onChange={handleChange} className={inputClass} /></div>
                         <div><label className={labelClass}>ID - IHLD</label><input name="idIhld" value={form.idIhld} onChange={handleChange} className={inputClass} /></div>
                         <div><label className={labelClass}>STO</label><input name="sto" value={form.sto} onChange={handleChange} className={inputClass} /></div>
                         <div><label className={labelClass}>Nama LOP</label><input name="namaLop" value={form.namaLop} onChange={handleChange} className={inputClass} /></div>

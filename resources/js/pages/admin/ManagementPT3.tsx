@@ -6,7 +6,6 @@ import AddModalLOP from "@/pages/admin/AddModalLOP";
 // ✅ Tipe data — nanti tinggal sesuaikan sama response API
 interface LOPItem {
     region: string;
-    distrik: string;
     ihld: string;
     lop: string;
     batch: string;
@@ -19,7 +18,6 @@ interface LOPItem {
 const dummyData: LOPItem[] = [
     {
         region: 'SUMBAGUT',
-        distrik: 'PEMATANG SIANTAR',
         ihld: '10882441',
         lop: 'SMU-ODC-PMS-FBS D BANTAN RESIDEN',
         batch: 'Batch 1',
@@ -41,8 +39,7 @@ export default function ManagementPT3() {
     const filtered = data.filter(row =>
         row.lop.toLowerCase().includes(search.toLowerCase()) ||
         row.ihld.toLowerCase().includes(search.toLowerCase()) ||
-        row.region.toLowerCase().includes(search.toLowerCase()) ||
-        row.distrik.toLowerCase().includes(search.toLowerCase())
+        row.region.toLowerCase().includes(search.toLowerCase()) 
     );
 
     return (
@@ -118,7 +115,6 @@ export default function ManagementPT3() {
                                 <thead>
                                     <tr className="bg-violet-600 text-white">
                                         <th className="px-4 py-1 text-center font-medium rounded-l-sm">Region FMC</th>
-                                        <th className="px-4 py-1 text-center font-medium">Distrik</th>
                                         <th className="px-4 py-1 text-center font-medium">IHLD</th>
                                         <th className="px-4 py-1 text-center font-medium">LOP</th>
                                         <th className="px-4 py-1 text-center font-medium">Batch Program</th>
@@ -140,9 +136,6 @@ export default function ManagementPT3() {
                                             <tr key={i} className="bg-white">
                                                 <td className="px-4 py-4 text-center text-gray-700 font-medium border-y border-l border-gray-100 rounded-l-sm">
                                                     {row.region}
-                                                </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
-                                                    {row.distrik}
                                                 </td>
                                                 <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
                                                     {row.ihld}
