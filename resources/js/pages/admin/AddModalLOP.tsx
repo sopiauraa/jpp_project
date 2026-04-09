@@ -261,10 +261,10 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
   const [createModal, setCreateModal] = useState<{ open:boolean; target:"status"|"subStatus"|null; value:string }>
     ({ open:false, target:null, value:"" });
 
-  // form state
+  // form state — regionTif kosong, diisi otomatis dari STO
   const [form, setForm] = useState({
     tahun:"", idIhld:"", sto:"", namaLop:"",
-    regionTif:"Regional 1", area:"", branchFmc:"", batchProgram:"",
+    regionTif:"", area:"", branchFmc:"", batchProgram:"",
     mitra:"", subcon:"",
     boqPlan:"", cpp:"", waspangMitra:"", waspangTif:"",
     odpPlan:"", projectAdmin:"", portPlan:"",
@@ -281,7 +281,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
-  // STO auto-fill
+  // STO auto-fill — termasuk regionTif
   const handleStoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.toUpperCase();
     const found = STO_DATA.find(r => r.sto === val);
@@ -298,6 +298,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
       setStoMatched(false);
       setForm(f => ({
         ...f, sto: val,
+        regionTif: "",
         area: "",
         branchFmc: "",
         batchProgram: "",
@@ -308,9 +309,9 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
   // Sub status auto dari status
   const currentStatus = form.status as LopStatus;
   const subStatusOptions = [
-  ...(STATUS_OPTIONS.includes(currentStatus) ? SUB_STATUS_MAP[currentStatus] : ["Sub 1","Sub 2","Sub 3"]),
-  ...(extraSubStatusMap[currentStatus] ?? []),
-];
+    ...(STATUS_OPTIONS.includes(currentStatus) ? SUB_STATUS_MAP[currentStatus] : ["Sub 1","Sub 2","Sub 3"]),
+    ...(extraSubStatusMap[currentStatus] ?? []),
+  ];
 
   const handleStatusChange = (val: string) => {
     setForm(f => ({ ...f, status: val, subStatus: "" }));
@@ -357,116 +358,116 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
 
         {/* ── CHOICE ── */}
-{view === "choice" && (
-  <div style={{
-    background: "linear-gradient(160deg, #faf9ff 0%, #f3f0ff 50%, #ede9fe 100%)",
-    borderRadius: "20px",
-    width: "100%",
-    maxWidth: "360px",
-    margin: "0 auto",
-    position: "relative",
-    overflow: "hidden",
-    boxShadow: "0 8px 32px rgba(139,92,246,0.12), 0 2px 8px rgba(0,0,0,0.06)",
-    border: "1px solid rgba(167,139,250,0.2)",
-  }}>
-
-    {/* Subtle top accent line */}
-    <div style={{
-      position:"absolute", top:0, left:0, right:0, height:"3px",
-      background:"linear-gradient(90deg, #a78bfa, #7c3aed, #a78bfa)",
-      borderRadius:"20px 20px 0 0",
-    }}/>
-
-    {/* Close btn */}
-    <button onClick={handleClose} style={{
-      position:"absolute", top:"14px", right:"14px",
-      width:"26px", height:"26px", borderRadius:"50%",
-      background:"rgba(139,92,246,0.08)", border:"none",
-      display:"flex", alignItems:"center", justifyContent:"center",
-      cursor:"pointer", color:"#9ca3af", transition:"all 0.2s",
-    }}
-    onMouseEnter={e => { e.currentTarget.style.background="rgba(139,92,246,0.15)"; e.currentTarget.style.color="#7c3aed"; }}
-    onMouseLeave={e => { e.currentTarget.style.background="rgba(139,92,246,0.08)"; e.currentTarget.style.color="#9ca3af"; }}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12"/>
-      </svg>
-    </button>
-
-    {/* Header */}
-    <div style={{ padding:"32px 28px 20px", textAlign:"center" }}>
-      <p style={{ color:"#1e1b4b", fontSize:"17px", fontWeight:700, letterSpacing:"-0.3px", margin:0 }}>
-        Tambahkan LOP Baru
-      </p>
-      <p style={{ color:"#9ca3af", fontSize:"12px", marginTop:"5px" }}>
-        Pilih cara input data LOP
-      </p>
-    </div>
-
-    {/* Divider */}
-    <div style={{ height:"1px", background:"rgba(139,92,246,0.1)", margin:"0 28px" }}/>
-
-    {/* Buttons */}
-    <div style={{ padding:"20px 28px 28px", display:"flex", flexDirection:"column", gap:"10px" }}>
-
-      <button onClick={() => setView("form")} style={{
-        width:"100%", padding:"0", border:"1px solid rgba(139,92,246,0.15)",
-        borderRadius:"12px", cursor:"pointer", overflow:"hidden",
-        background:"white", transition:"all 0.18s", textAlign:"left",
-        boxShadow:"0 1px 4px rgba(0,0,0,0.04)",
-      }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(124,58,237,0.4)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(124,58,237,0.12)"; e.currentTarget.style.transform="translateY(-1px)"; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(139,92,246,0.15)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"14px 16px" }}>
+        {view === "choice" && (
           <div style={{
-            width:"36px", height:"36px", borderRadius:"9px", flexShrink:0,
-            background:"linear-gradient(135deg, #ede9fe, #ddd6fe)",
-            display:"flex", alignItems:"center", justifyContent:"center",
+            background: "linear-gradient(160deg, #faf9ff 0%, #f3f0ff 50%, #ede9fe 100%)",
+            borderRadius: "20px",
+            width: "100%",
+            maxWidth: "360px",
+            margin: "0 auto",
+            position: "relative",
+            overflow: "hidden",
+            boxShadow: "0 8px 32px rgba(139,92,246,0.12), 0 2px 8px rgba(0,0,0,0.06)",
+            border: "1px solid rgba(167,139,250,0.2)",
           }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#7c3aed">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-          </div>
-          <div style={{ flex:1 }}>
-            <p style={{ color:"#1e1b4b", fontSize:"13px", fontWeight:600, margin:0 }}>Isi Form LOP</p>
-            <p style={{ color:"#9ca3af", fontSize:"11px", marginTop:"2px" }}>Input manual langkah demi langkah</p>
-          </div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c4b5fd">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </button>
 
-      <button onClick={() => setView("import")} style={{
-        width:"100%", padding:"0", border:"1px solid rgba(139,92,246,0.15)",
-        borderRadius:"12px", cursor:"pointer", overflow:"hidden",
-        background:"white", transition:"all 0.18s", textAlign:"left",
-        boxShadow:"0 1px 4px rgba(0,0,0,0.04)",
-      }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(124,58,237,0.4)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(124,58,237,0.12)"; e.currentTarget.style.transform="translateY(-1px)"; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(139,92,246,0.15)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"14px 16px" }}>
-          <div style={{
-            width:"36px", height:"36px", borderRadius:"9px", flexShrink:0,
-            background:"linear-gradient(135deg, #ede9fe, #ddd6fe)",
-            display:"flex", alignItems:"center", justifyContent:"center",
-          }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#7c3aed">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 8l-5-5-5 5M12 3v12"/>
-            </svg>
-          </div>
-          <div style={{ flex:1 }}>
-            <p style={{ color:"#1e1b4b", fontSize:"13px", fontWeight:600, margin:0 }}>Import Data LOP</p>
-            <p style={{ color:"#9ca3af", fontSize:"11px", marginTop:"2px" }}>Upload file Excel sekaligus</p>
-          </div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c4b5fd">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </button>
+            {/* Subtle top accent line */}
+            <div style={{
+              position:"absolute", top:0, left:0, right:0, height:"3px",
+              background:"linear-gradient(90deg, #a78bfa, #7c3aed, #a78bfa)",
+              borderRadius:"20px 20px 0 0",
+            }}/>
 
-    </div>
-  </div>
-)}
+            {/* Close btn */}
+            <button onClick={handleClose} style={{
+              position:"absolute", top:"14px", right:"14px",
+              width:"26px", height:"26px", borderRadius:"50%",
+              background:"rgba(139,92,246,0.08)", border:"none",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              cursor:"pointer", color:"#9ca3af", transition:"all 0.2s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background="rgba(139,92,246,0.15)"; e.currentTarget.style.color="#7c3aed"; }}
+            onMouseLeave={e => { e.currentTarget.style.background="rgba(139,92,246,0.08)"; e.currentTarget.style.color="#9ca3af"; }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+
+            {/* Header */}
+            <div style={{ padding:"32px 28px 20px", textAlign:"center" }}>
+              <p style={{ color:"#1e1b4b", fontSize:"17px", fontWeight:700, letterSpacing:"-0.3px", margin:0 }}>
+                Tambahkan LOP Baru
+              </p>
+              <p style={{ color:"#9ca3af", fontSize:"12px", marginTop:"5px" }}>
+                Pilih cara input data LOP
+              </p>
+            </div>
+
+            {/* Divider */}
+            <div style={{ height:"1px", background:"rgba(139,92,246,0.1)", margin:"0 28px" }}/>
+
+            {/* Buttons */}
+            <div style={{ padding:"20px 28px 28px", display:"flex", flexDirection:"column", gap:"10px" }}>
+
+              <button onClick={() => setView("form")} style={{
+                width:"100%", padding:"0", border:"1px solid rgba(139,92,246,0.15)",
+                borderRadius:"12px", cursor:"pointer", overflow:"hidden",
+                background:"white", transition:"all 0.18s", textAlign:"left",
+                boxShadow:"0 1px 4px rgba(0,0,0,0.04)",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(124,58,237,0.4)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(124,58,237,0.12)"; e.currentTarget.style.transform="translateY(-1px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(139,92,246,0.15)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
+                <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"14px 16px" }}>
+                  <div style={{
+                    width:"36px", height:"36px", borderRadius:"9px", flexShrink:0,
+                    background:"linear-gradient(135deg, #ede9fe, #ddd6fe)",
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                  }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#7c3aed">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <div style={{ flex:1 }}>
+                    <p style={{ color:"#1e1b4b", fontSize:"13px", fontWeight:600, margin:0 }}>Isi Form LOP</p>
+                    <p style={{ color:"#9ca3af", fontSize:"11px", marginTop:"2px" }}>Input manual langkah demi langkah</p>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c4b5fd">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </button>
+
+              <button onClick={() => setView("import")} style={{
+                width:"100%", padding:"0", border:"1px solid rgba(139,92,246,0.15)",
+                borderRadius:"12px", cursor:"pointer", overflow:"hidden",
+                background:"white", transition:"all 0.18s", textAlign:"left",
+                boxShadow:"0 1px 4px rgba(0,0,0,0.04)",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(124,58,237,0.4)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(124,58,237,0.12)"; e.currentTarget.style.transform="translateY(-1px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(139,92,246,0.15)"; e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform="translateY(0)"; }}>
+                <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"14px 16px" }}>
+                  <div style={{
+                    width:"36px", height:"36px", borderRadius:"9px", flexShrink:0,
+                    background:"linear-gradient(135deg, #ede9fe, #ddd6fe)",
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                  }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#7c3aed">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                  </div>
+                  <div style={{ flex:1 }}>
+                    <p style={{ color:"#1e1b4b", fontSize:"13px", fontWeight:600, margin:0 }}>Import Data LOP</p>
+                    <p style={{ color:"#9ca3af", fontSize:"11px", marginTop:"2px" }}>Upload file Excel sekaligus</p>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c4b5fd">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </button>
+
+            </div>
+          </div>
+        )}
 
         {/* ── FORM / IMPORT ── */}
         {view !== "choice" && (
@@ -551,8 +552,8 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                           <input name="namaLop" value={form.namaLop} onChange={handleChange} className={inputClass}/>
                         </div>
                         <div>
-                          <Label required>Region TIF</Label>
-                          <ReadOnlyInput value={form.regionTif}/>
+                          <Label required>Region FMC</Label>
+                          <ReadOnlyInput value={form.regionTif || "—"}/>
                         </div>
                         <div>
                           <Label required>Area</Label>
@@ -562,7 +563,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                           <Label required>Branch FMC</Label>
                           <ReadOnlyInput value={form.branchFmc || "—"}/>
                         </div>
-                        {/* ── BATCH PROGRAM: auto-fill jika STO cocok, dropdown jika tidak ── */}
+                        {/* BATCH PROGRAM: auto-fill jika STO cocok, dropdown jika tidak */}
                         <div>
                           <Label required>Batch Program</Label>
                           {stoMatched
@@ -676,13 +677,12 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                             className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none transition"/>
                         </div>
 
-                        {/* Golive extra fields — muncul hanya saat status = Golive */}
+                        {/* Golive extra fields */}
                         {isGolive && (
                           <div className="col-span-2">
                             <div className="border border-violet-200 bg-violet-50 rounded-lg px-4 pt-3 pb-2 mb-1">
                               <p className="text-xs font-semibold text-violet-600 mb-2 uppercase tracking-wide">Data Golive</p>
                               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-                                {/* Tanggal Golive hanya muncul di sini */}
                                 <div className="col-span-2">
                                   <Label>Tanggal Golive</Label>
                                   <input type="date" name="tanggalGolive" value={form.tanggalGolive}
@@ -763,7 +763,6 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                     {currentStep === 4 && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3">
 
-                        {/* Selalu tampil */}
                         <div>
                           <Label>Nilai PRELIM</Label>
                           <input name="nilaiPrelim" value={form.nilaiPrelim} onChange={handleChange} className={inputClass}/>
@@ -773,7 +772,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                           <input name="cppAkhir" value={form.cppAkhir} onChange={handleChange} className={inputClass}/>
                         </div>
 
-                        {/* Status = Persiapan → tampilkan Port Plan */}
+                        {/* Status = Persiapan */}
                         {isPersiapan && (
                           <div className="col-span-2">
                             <div className="border border-blue-200 bg-blue-50 rounded-lg px-4 pt-3 pb-3">
@@ -796,7 +795,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                           </div>
                         )}
 
-                        {/* Status = Aandwidjzing → tampilkan Aandwidjzing fields */}
+                        {/* Status = Aandwidjzing */}
                         {isAandwidjzing && (
                           <div className="col-span-2">
                             <div className="border border-amber-200 bg-amber-50 rounded-lg px-4 pt-3 pb-3">
@@ -823,7 +822,7 @@ export default function AddModalLOP({ isOpen, onClose }: AddModalLOPProps) {
                           </div>
                         )}
 
-                        {/* Status = Golive → tampilkan Port Golive */}
+                        {/* Status = Golive */}
                         {isGolive && (
                           <div className="col-span-2">
                             <div className="border border-green-200 bg-green-50 rounded-lg px-4 pt-3 pb-3">
