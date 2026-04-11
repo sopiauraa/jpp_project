@@ -11,7 +11,7 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link, usePage } from '@inertiajs/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import logo from '@/assets/images/cakra logo.png';
 
 const menuItems = [
@@ -60,6 +60,14 @@ export default function Sidebar() {
         return window.innerWidth < 1024;
     });
 
+    // Set CSS variable saat pertama kali mount (sebelum ada animasi)
+    useEffect(() => {
+        document.documentElement.style.setProperty(
+            '--sidebar-width',
+            collapsed ? '64px' : '224px'
+        );
+    }, []);
+
     // Mobile: drawer open/close state
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -74,6 +82,10 @@ export default function Sidebar() {
 
     useEffect(() => {
         localStorage.setItem('sidebar-collapsed', String(collapsed));
+        document.documentElement.style.setProperty(
+            '--sidebar-width',
+            collapsed ? '64px' : '224px'
+        );
     }, [collapsed]);
 
     // Tutup drawer kalau navigasi ke halaman lain

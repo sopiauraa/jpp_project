@@ -25,4 +25,15 @@ Route::get('/admin/Setting', function () { return Inertia::render('admin/Setting
 Route::get('/admin/Notification', function () { return Inertia::render('admin/Notification');});
 Route::get('/admin/Profile', function () { return Inertia::render('admin/Profile');});
 
+
+// mitra admin route
+Route::get('/mitraAdmin/MitraManagementPT3', function () { return Inertia::render('mitraAdmin/MitraManagementPT3');});
+Route::get('/mitraAdmin/DetailLOP', function () { return Inertia::render('mitraAdmin/DetailLOP');});
+Route::get('/mitraAdmin/Notification', function () { return Inertia::render('mitraAdmin/Notification');});
+
+// ed admin route
+Route::get('/edAdmin/EdManagementPT3', function () { return Inertia::render('edAdmin/EdManagementPT3');});
+Route::get('/edAdmin/DetailLOP', function () { return Inertia::render('edAdmin/DetailLOP');});
+Route::get('/edAdmin/Notification', function () { return Inertia::render('edAdmin/Notification');});
+
 require __DIR__.'/settings.php';

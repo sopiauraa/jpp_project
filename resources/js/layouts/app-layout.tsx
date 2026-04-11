@@ -11,9 +11,16 @@ export default function AppLayout({ children, title = 'Dashboard' }: PropsWithCh
     return (
         <div className="flex min-h-screen bg-gray-50">
             <Sidebar />
-            <div className="flex-1 flex flex-col lg:ml-56">
+            <div
+                className="flex flex-col min-h-screen"
+                style={{
+                    width: 'calc(100% - var(--sidebar-width, 224px))',
+                    marginLeft: 'var(--sidebar-width, 224px)',
+                    transition: 'width 350ms cubic-bezier(0.4, 0, 0.2, 1), margin-left 350ms cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+            >
                 <Navbar title={title} />
-                <main className="flex-1 overflow-auto">
+                <main className="flex-1 min-w-0 overflow-y-auto">
                     {children}
                 </main>
             </div>

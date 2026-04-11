@@ -198,7 +198,7 @@ export default function LOPDetail() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2 flex-wrap">
                         <Link
-                            href="/admin/ManagementPT3"
+                            href="/edAdmin/EdManagementPT3"
                             className="p-2 rounded-lg hover:bg-white transition-colors shrink-0"
                         >
                             <ArrowLeftIcon className="w-4 h-4 text-gray-500" />

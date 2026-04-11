@@ -128,45 +128,51 @@ function Sparkline({ data }: { data: number[] }) {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        const w = canvas.offsetWidth || 100;
-        const h = 28;
+        const draw = () => {
+            const w = canvas.getBoundingClientRect().width;
+            const h = 28;
+            canvas.width = w;
+            canvas.height = h;
 
-        canvas.width = w;
-        canvas.height = h;
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min || 1;
 
-        const min = Math.min(...data);
-        const max = Math.max(...data);
-        const range = max - min || 1;
+            const pts = data.map((v, i) => ({
+                x: (i / (data.length - 1)) * w,
+                y: h - ((v - min) / range) * (h - 4) - 2,
+            }));
 
-        const pts = data.map((v, i) => ({
-            x: (i / (data.length - 1)) * w,
-            y: h - ((v - min) / range) * (h - 4) - 2,
-        }));
+            ctx.clearRect(0, 0, w, h);
 
-        ctx.clearRect(0, 0, w, h);
-
-        // line
-        ctx.beginPath();
-        pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // fill (biar estetik kayak awal)
-        ctx.lineTo(w, h);
-        ctx.lineTo(0, h);
-        ctx.closePath();
-        ctx.fillStyle = "rgba(255,255,255,0.15)";
-        ctx.fill();
-
-        // hover point
-        if (hover !== null) {
-            const p = pts[hover];
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = "#fff";
+            pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            ctx.fillStyle = "rgba(255,255,255,0.15)";
             ctx.fill();
-        }
+
+            if (hover !== null) {
+                const p = pts[hover];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = "#fff";
+                ctx.fill();
+            }
+        };
+
+        draw(); // gambar pertama kali
+
+        // Redraw otomatis saat ukuran berubah (sidebar toggle)
+        const observer = new ResizeObserver(draw);
+        const parent = canvas.parentElement;
+        if (parent) observer.observe(parent);
+        return () => observer.disconnect();
 
     }, [data, hover]);
 
@@ -215,7 +221,7 @@ function KpiCard({ item }: { item: KpiItem }) {
 
     return (
         <div
-        className="rounded-lg px-3 py-2 flex flex-col justify-between min-h-[105px] hover:shadow-md transition relative overflow-hidden text-white"
+        className="rounded-lg px-3 py-2 flex flex-col justify-between min-h-[105px] hover:shadow-md transition relative overflow-hidden text-white w-full min-w-0"
         style={{
             background: `linear-gradient(135deg, ${color}, ${color}cc)`
         }}
@@ -471,7 +477,7 @@ export default function PT3Konstruksi() {
                     font        : { size: 9 },
                     maxTicksLimit: 10,
                     callback    : (val: any, idx: number) => {
-                        // tampilkan label hanya di kelipatan 2 agar tidak padat
+
                         return idx === 0 || (idx + 1) % 2 === 1 ? idx + 1 : '';
                     },
                 },
@@ -481,9 +487,10 @@ export default function PT3Konstruksi() {
                 ticks: {
                     color   : '#9ca3af',
                     font    : { size: 9 },
-                    callback: (val: number) => {
-                        if (val === 0)    return '0';
-                        if (val >= 1000)  return `${val / 1000} rb`;
+                    callback: (val: string | number) => {
+                        const n = Number(val);
+                        if (n === 0)   return '0';
+                        if (n >= 1000) return `${n / 1000} rb`;
                         return val;
                     },
                 },
@@ -596,7 +603,7 @@ export default function PT3Konstruksi() {
         <AppLayout>
             <Head title="PT3 Konstruksi — Dashboard" />
 
-            <div className="p-5 max-w-[1600px] mx-auto pb-16">
+            <div className="w-full pb-16 transition-all duration-300 px-5 pt-5 box-border">
 
                 {/* ── TOPBAR ── */}
                 <div className="flex items-center mb-5">
@@ -634,15 +641,11 @@ export default function PT3Konstruksi() {
                 </div>
 
                 {/* ── KPI CARDS ── */}
-                <div className="flex gap-3 overflow-x-auto pb-2">
-                {KPI.map((item) => (
-                    <div className="min-w-[160px]">
-                    <KpiCard item={item} />
-                    </div>
-                ))}
+                <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(148px, 1fr))' }}>
+                    {KPI.map((item, i) => <KpiCard key={i} item={item} />)}
                 </div>
                 {/* ── ROW 1: Monthly | Trend | Rank ── */}
-                <div className="grid grid-cols-3 gap-3 mb-3 max-xl:grid-cols-2 max-md:grid-cols-1">
+                <div className="grid gap-3 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
 
                     {/* Monthly GoLive */}
                     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -750,7 +753,7 @@ export default function PT3Konstruksi() {
                 </div>
 
                 {/* ── ROW 2: Pie | Realisasi | Scope ── */}
-                <div className="grid grid-cols-3 gap-3 mb-3 max-xl:grid-cols-2 max-md:grid-cols-1">
+                <div className="grid gap-3 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
 
                     {/* Pie — Nilai BoQ */}
                     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -840,7 +843,7 @@ export default function PT3Konstruksi() {
                 </div>
 
                 {/* ── ROW 3: Dist Tables ── */}
-                <div className="grid grid-cols-3 gap-3 mb-3 max-md:grid-cols-1">
+                <div className="grid gap-3 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
                     <DistTable title="Distribusi Status"     rows={distStatus} />
                     <DistTable title="Distribusi Sub-Status" rows={distSubStatus} />
                     <DistTable title="Distribusi Region"     rows={distRegion} />
@@ -860,22 +863,24 @@ export default function PT3Konstruksi() {
                             </div>
                         ))}
                     </div>
-                    <div className="px-4 pb-4" style={{ height: 260 }}>
-                        <Bar
-                            data={stackedData}
-                            options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: { legend: { display: false } },
-                                scales: {
-                                    x: {
-                                        grid: { display: false },
-                                        ticks: { color: '#9ca3af', font: { size: 9 }, maxRotation: 45, autoSkip: false },
-                                        stacked: true,
+                    <div className="px-4 pb-4 overflow-x-auto">
+                        <div style={{ minWidth: 600, height: 260 }}>
+                            <Bar
+                                data={stackedData}
+                                options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        x: {
+                                            grid: { display: false },
+                                            ticks: { color: '#9ca3af', font: { size: 9 }, maxRotation: 45, autoSkip: false },
+                                            stacked: true,
+                                        },
+                                        y: { ...baseScales.y, stacked: true },
                                     },
-                                    y: { ...baseScales.y, stacked: true },
-                                },
-                            }}
-                        />
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
 

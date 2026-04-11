@@ -233,7 +233,7 @@ function NotifikasiTab() {
     izin: false,
     export: true,
     email: false,
-    whatsapp: false,
+    // whatsapp: false,
   });
   const toggle = (k: keyof typeof notifs) => () => setNotifs((p) => ({ ...p, [k]: !p[k] }));
 
@@ -254,7 +254,7 @@ function NotifikasiTab() {
       <SectionCard title="Notifikasi Eksternal">
         <NotifRow label="Email" desc="Kirim ringkasan notifikasi ke email" checked={notifs.email} onChange={toggle("email")} />
         <div className="border-t border-gray-50" />
-        <NotifRow label="WhatsApp" desc="Terima alert penting via WhatsApp" checked={notifs.whatsapp} onChange={toggle("whatsapp")} />
+        {/* <NotifRow label="WhatsApp" desc="Terima alert penting via WhatsApp" checked={notifs.whatsapp} onChange={toggle("whatsapp")} /> */}
       </SectionCard>
     </div>
   );
