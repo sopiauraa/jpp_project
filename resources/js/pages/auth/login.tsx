@@ -741,7 +741,7 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
 
                         <div className="lg-right-body">
                             <p className="lg-tagline">Platform Konstruksi<br />Terintegrasi</p>
-                            <p className="lg-desc">Monitor progres PT3, evaluasi subcon, dan kelola operasional proyek dalam satu platform terpadu.</p>
+                            <p className="lg-desc">Monitor JPP, evaluasi subcon, dan kelola operasional proyek dalam satu platform terpadu.</p>
                         </div>
                     </div>
 

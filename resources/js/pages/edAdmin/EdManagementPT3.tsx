@@ -1,5 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { useState } from "react";
+import SearchFilter from "@/components/search-filter";
+import AddLopedAdmin, { ExistingLOPDataED } from "./AddLopedAdmin";
 
 interface LOPItem {
     region: string;
@@ -10,6 +12,19 @@ interface LOPItem {
     nilaiBoq: string;
     status: string;
     subStatus: string;
+    waspangTif?: 'belum' | 'sudah';
+    waspangMitra?: string;
+    sto?: string;
+    area?: string;
+    branchFmc?: string;
+    tahun?: string;
+    mitra?: string;
+    subcon?: string;
+    boqPlan?: string;
+    cpp?: string;
+    odpPlan?: string;
+    projectAdmin?: string;
+    portPlan?: string;
 }
 
 const dummyData: LOPItem[] = [
@@ -22,12 +37,40 @@ const dummyData: LOPItem[] = [
         nilaiBoq: '133,381,508',
         status: 'GoLive',
         subStatus: 'x4 Non Teknis - CPP Tinggi (acc ED TIF)',
+        waspangTif: 'belum',
+        waspangMitra: 'Budi Santoso',
+    },
+    {
+        region: 'SUMBAGUT',
+        distrik: 'PEMATANG SIANTAR',
+        ihld: '10882310',
+        lop: 'SMU-ODC-BDG-CIHAMPELAS BLOK C',
+        batch: 'Batch 1',
+        nilaiBoq: '88,500,000',
+        status: 'GoLive',
+        subStatus: 'x4 Non Teknis - CPP Tinggi (acc ED TIF)',
+        waspangTif: 'sudah',
+        waspangMitra: 'Agus Wijaya',
+    },
+    {
+        region: 'SUMBAGUT',
+        distrik: 'PEMATANG SIANTAR',
+        ihld: '10882398',
+        lop: 'SMU-ODC-PSR-GDG MERDEKA',
+        batch: 'Batch 1',
+        nilaiBoq: '98,200,000',
+        status: 'GoLive',
+        subStatus: 'x4 Non Teknis - CPP Tinggi',
+        waspangTif: 'belum',
+        waspangMitra: 'Rina Kusuma',
     },
 ];
 
 export default function ManagementPT3() {
     const [search, setSearch] = useState("");
     const [showEntries, setShowEntries] = useState("10");
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedLOP, setSelectedLOP] = useState<ExistingLOPDataED | null>(null);
 
     const data = dummyData;
 
@@ -37,6 +80,8 @@ export default function ManagementPT3() {
         row.region.toLowerCase().includes(search.toLowerCase()) ||
         row.distrik.toLowerCase().includes(search.toLowerCase())
     );
+
+    const belumDiisiCount = data.filter(row => row.waspangTif === 'belum').length;
 
     return (
         <>
@@ -49,16 +94,31 @@ export default function ManagementPT3() {
                     </h1>
                     <Link
                         href="/edAdmin/Notification"
-                        className="relative p-2 rounded-xl bg-white shadow hover:bg-violet-50 transition-colors"
+                        className="relative p-2 rounded-xl bg-white shadow hover:bg-amber-50 transition-colors"
                     >
-                        {/* Icon Bell */}
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
-                        {/* Badge merah — hapus kalau ga ada notif */}
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+                        {belumDiisiCount > 0 && (
+                            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-semibold rounded-full ring-2 ring-white flex items-center justify-center">
+                                {belumDiisiCount}
+                            </span>
+                        )}
                     </Link>
                 </div>
+
+                {/* Banner peringatan */}
+                {belumDiisiCount > 0 && (
+                    <div className="flex items-center gap-3 bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 mb-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        </svg>
+                        <p className="text-sm text-amber-800 flex-1">
+                            <span className="font-semibold">{belumDiisiCount} LOP belum dilengkapi.</span>{' '}
+                            Waspang ED (TIF) pada LOP berikut perlu kamu isi sebelum proses dapat dilanjutkan.
+                        </p>
+                    </div>
+                )}
 
                 {/* Card */}
                 <div className="bg-white p-4 sm:p-6 rounded-xl shadow">
@@ -83,30 +143,21 @@ export default function ManagementPT3() {
                         </div>
 
                         {/* Search + Filter */}
-                        <div className="flex items-center flex-1 border border-gray-300 rounded-lg overflow-hidden">
-                            <span className="pl-3 text-gray-400 shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-                                </svg>
-                            </span>
-                            <input
-                                type="text"
-                                placeholder="Cari LOP, IHLD..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="flex-1 px-3 py-2 text-sm focus:outline-none bg-transparent"
-                            />
-                            <div className="w-px h-6 bg-gray-200 shrink-0" />
-                            <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-violet-500 hover:bg-violet-600 transition font-medium shrink-0">
-                                Filter
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 .707 1.707L13 12.414V19a1 1 0 0 1-1.447.894l-4-2A1 1 0 0 1 7 17v-4.586L3.293 5.707A1 1 0 0 1 3 5V4z" />
-                                </svg>
-                            </button>
-                        </div>
+                        <SearchFilter
+                            placeholder="Cari LOP, IHLD..."
+                            searchValue={search}
+                            onSearchChange={setSearch}
+                            onFilterClick={() => {}}
+                        />
 
                         {/* Buat LOP Button */}
-                        <button className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium shrink-0">
+                        <button
+                            onClick={() => {
+                                setSelectedLOP(null);
+                                setModalOpen(true);
+                            }}
+                            className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2 text-sm bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition font-medium shrink-0"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                             </svg>
@@ -140,7 +191,10 @@ export default function ManagementPT3() {
                                         </tr>
                                     ) : (
                                         filtered.map((row, i) => (
-                                            <tr key={i} className="bg-white">
+                                            <tr
+                                                key={i}
+                                                className={row.waspangTif === 'belum' ? 'bg-amber-50' : 'bg-white'}
+                                            >
                                                 <td className="px-4 py-4 text-center text-gray-700 font-medium border-y border-l border-gray-100 rounded-l-sm">
                                                     {row.region}
                                                 </td>
@@ -150,9 +204,50 @@ export default function ManagementPT3() {
                                                 <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
                                                     {row.ihld}
                                                 </td>
-                                                <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100 text-xs leading-relaxed">
-                                                    {row.lop}
+
+                                                {/* Kolom LOP */}
+                                                <td className="px-4 py-3 text-center border-y border-gray-100">
+                                                    <p className="text-gray-600 text-xs leading-relaxed mb-1">{row.lop}</p>
+                                                    {row.waspangTif === 'belum' ? (
+                                                        <div className="flex items-center justify-center gap-1.5">
+                                                            <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+                                                            <span className="text-[11px] text-amber-700">Waspang ED belum diisi</span>
+                                                            <span className="text-amber-300 text-[11px]">—</span>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSelectedLOP({
+                                                                        idIhld:       row.ihld,
+                                                                        lop:          row.lop,
+                                                                        sto:          row.sto ?? "",
+                                                                        regionTif:    row.region,
+                                                                        area:         row.area ?? "",
+                                                                        branchFmc:    row.branchFmc ?? "",
+                                                                        batchProgram: row.batch,
+                                                                        tahun:        row.tahun ?? "",
+                                                                        mitra:        row.mitra ?? "",
+                                                                        subcon:       row.subcon ?? "",
+                                                                        boqPlan:      row.boqPlan ?? "",
+                                                                        cpp:          row.cpp ?? "",
+                                                                        odpPlan:      row.odpPlan ?? "",
+                                                                        projectAdmin: row.projectAdmin ?? "",
+                                                                        portPlan:     row.portPlan ?? "",
+                                                                        waspangMitra: row.waspangMitra ?? "",
+                                                                    });
+                                                                    setModalOpen(true);
+                                                                }}
+                                                                className="text-[11px] font-medium text-violet-600 hover:underline whitespace-nowrap"
+                                                            >
+                                                                Isi sekarang
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center justify-center gap-1.5">
+                                                            <span className="w-2 h-2 rounded-full bg-green-400 shrink-0" />
+                                                            <span className="text-[11px] text-green-700">Waspang ED sudah diisi</span>
+                                                        </div>
+                                                    )}
                                                 </td>
+
                                                 <td className="px-4 py-4 text-center text-gray-600 border-y border-gray-100">
                                                     {row.batch}
                                                 </td>
@@ -215,6 +310,13 @@ export default function ManagementPT3() {
 
                 </div>
             </div>
+
+            {/* Modal AddLopedAdmin */}
+            <AddLopedAdmin
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                existingData={selectedLOP}
+            />
         </>
     );
 }

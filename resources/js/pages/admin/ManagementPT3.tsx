@@ -2,6 +2,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from "react";
 import AppLayout from "@/layouts/app-layout";
 import AddModalLOP from "@/pages/admin/AddModalLOP";
+import SearchFilter from "@/components/search-filter";
 
 interface LOPItem {
     region: string;
@@ -75,33 +76,17 @@ export default function ManagementPT3() {
                                 <span>entries</span>
                             </div>
 
-                            {/* Search + Filter */}
-                            <div className="flex items-center flex-1 border border-gray-300 rounded-lg overflow-hidden">
-                                <span className="pl-3 text-gray-400 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-                                    </svg>
-                                </span>
-                                <input
-                                    type="text"
-                                    placeholder="Cari LOP, IHLD..."
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    className="flex-1 px-3 py-2 text-sm focus:outline-none bg-transparent"
-                                />
-                                <div className="w-px h-6 bg-gray-200 shrink-0" />
-                                <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-violet-500 hover:bg-violet-600 transition font-medium shrink-0">
-                                    Filter
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 .707 1.707L13 12.414V19a1 1 0 0 1-1.447.894l-4-2A1 1 0 0 1 7 17v-4.586L3.293 5.707A1 1 0 0 1 3 5V4z" />
-                                    </svg>
-                                </button>
-                            </div>
+                           <SearchFilter
+                            placeholder="Cari LOP, IHLD..."
+                            searchValue={search}
+                            onSearchChange={setSearch}
+                            onFilterClick={() => {/* logic filter nanti */}}
+                        />
 
                             {/* Buat LOP Button */}
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium shrink-0"
+                                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2 text-sm bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition font-medium shrink-0"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

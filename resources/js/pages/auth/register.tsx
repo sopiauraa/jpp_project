@@ -619,7 +619,7 @@ export default function Register() {
 
                         <div className="rg-left-body">
                             <p className="rg-tagline">Platform Konstruksi<br />Terintegrasi</p>
-                            <p className="rg-desc">Monitor progres PT3, evaluasi subcon, dan kelola operasional proyek dalam satu platform terpadu.</p>
+                            <p className="rg-desc">Monitor JPP, evaluasi subcon, dan kelola operasional proyek dalam satu platform terpadu.</p>
                         </div>
                     </div>
 
