@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import { Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import SearchFilter from "@/components/search-filter";
 import AddModalUser from '@/pages/admin/AddModalUser';
 import ActivityDrawer from '@/pages/admin/ActivityDrawer';
 import {
     PlusIcon,
-    PencilSquareIcon,
     TrashIcon,
 } from '@heroicons/react/24/outline';
 
@@ -109,7 +109,7 @@ export default function UserManagement() {
                                     activityLog={activityLog}
                                     maxAvatar={MAX_AVATAR}
                                     maxLog={MAX_LOG}
-                                    onViewAll={() => setShowDrawer(true)} 
+                                    onViewAll={() => setShowDrawer(true)}
                                 />
                             </div>
                         )}
@@ -168,9 +168,15 @@ export default function UserManagement() {
                                                 </td>
                                                 <td className="px-4 py-3.5 text-center rounded-r-lg whitespace-nowrap">
                                                     <div className="flex items-center justify-center gap-2">
-                                                        <button className="p-1.5 rounded-lg text-violet-500 hover:bg-violet-100 transition-colors">
-                                                            <PencilSquareIcon className="w-4 h-4" />
-                                                        </button>
+                                                        {/* Detail icon — sama persis dengan ManagementPT3 */}
+                                                        <Link
+                                                            href={`/admin/DetailUser/${user.id}`}
+                                                            className="p-1.5 rounded-lg bg-violet-500 hover:bg-violet-600 text-white transition-colors inline-flex"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                                            </svg>
+                                                        </Link>
                                                         <button className="p-1.5 rounded-lg text-red-400 hover:bg-red-100 transition-colors">
                                                             <TrashIcon className="w-4 h-4" />
                                                         </button>
@@ -253,13 +259,13 @@ function OnlinePanel({
     activityLog,
     maxAvatar = 4,
     maxLog = 10,
-    onViewAll, 
+    onViewAll,
 }: {
     onlineUsers: { name: string; avatar: string }[];
     activityLog: { name: string; time: string; activity: string }[];
     maxAvatar?: number;
     maxLog?: number;
-    onViewAll?: () => void
+    onViewAll?: () => void;
 }) {
     const visibleAvatars = onlineUsers.slice(0, maxAvatar);
     const remainingCount = onlineUsers.length - maxAvatar;
@@ -310,10 +316,11 @@ function OnlinePanel({
 
             <div className="mt-3 pt-3 border-t border-gray-100">
                 <button
-                onClick={onViewAll}
-                className="text-xs text-violet-600 hover:underline w-full text-right">
-                Lihat Semua →
-            </button>
+                    onClick={onViewAll}
+                    className="text-xs text-violet-600 hover:underline w-full text-right"
+                >
+                    Lihat Semua →
+                </button>
             </div>
         </>
     );

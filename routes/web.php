@@ -24,7 +24,7 @@ Route::get('/admin/UserManagement', function () { return Inertia::render('admin/
 Route::get('/admin/Setting', function () { return Inertia::render('admin/Setting');});
 Route::get('/admin/Notification', function () { return Inertia::render('admin/Notification');});
 Route::get('/admin/Profile', function () { return Inertia::render('admin/Profile');});
-
+Route::get('/admin/DetailUser/{id}', function ($id) { return Inertia::render('admin/DetailUser');});  // tambah ini
 
 // mitra admin route
 Route::get('/mitraAdmin/MitraManagementPT3', function () { return Inertia::render('mitraAdmin/MitraManagementPT3');});

@@ -279,7 +279,6 @@ export default function AddLopMitraAdmin({ isOpen, onClose, existingData }: AddL
   const [createModal, setCreateModal] = useState<{ open:boolean; target:"status"|"subStatus"|null; value:string }>
     ({ open:false, target:null, value:"" });
 
-  // Form state — waspangTif dihapus
   const emptyForm = {
     tahun:"", idIhld:"", sto:"", namaLop:"",
     regionTif:"", area:"", branchFmc:"", batchProgram:"",
@@ -361,12 +360,7 @@ export default function AddLopMitraAdmin({ isOpen, onClose, existingData }: AddL
   const isPersiapan    = form.status === "Persiapan";
 
   const handleNext  = () => { if (currentStep < steps.length-1) setCurrentStep(s => s+1); };
-  const handleBack  = () => {
-    if (currentStep > 0) {
-      if (isIsiWaspangMode && currentStep === 1) return;
-      setCurrentStep(s => s-1);
-    }
-  };
+  const handleBack  = () => { if (currentStep > 0) setCurrentStep(s => s-1); };
 
   const handleClose = () => {
     setView("choice"); setCurrentStep(0); setShowOltExtra(false); setStoMatched(false);
@@ -388,6 +382,9 @@ export default function AddLopMitraAdmin({ isOpen, onClose, existingData }: AddL
   };
 
   const inputClass = "w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition";
+
+  // ── KEY FIX: waspang mode → selalu tampil Simpan langsung ──
+  const isLastStep = isIsiWaspangMode || currentStep === steps.length - 1;
 
   if (!isOpen) return null;
 
@@ -737,19 +734,45 @@ export default function AddLopMitraAdmin({ isOpen, onClose, existingData }: AddL
                   </div>{/* end scroll */}
                 </div>{/* end inner box */}
 
-                {/* Footer nav */}
+                {/* ── FOOTER NAV ── */}
                 <div className="flex justify-end gap-3 mt-3 flex-shrink-0">
-                  {currentStep > 0 && !(isIsiWaspangMode && currentStep === 1)
-                    ? <button onClick={handleBack} className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium">Kembali</button>
-                    : <button onClick={isIsiWaspangMode ? handleClose : () => setView("choice")} className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium">
-                        {isIsiWaspangMode ? "Batal" : "Kembali"}
+                  {/* Tombol kiri: Batal (waspang) | Kembali ke choice (step 0) | Kembali (step > 0) */}
+                  <button
+                    onClick={
+                      isIsiWaspangMode
+                        ? handleClose
+                        : currentStep > 0
+                          ? handleBack
+                          : () => setView("choice")
+                    }
+                    className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium"
+                  >
+                    {isIsiWaspangMode ? "Batal" : currentStep > 0 ? "Kembali" : "Kembali"}
+                  </button>
+
+                  {/* ── KEY FIX ──
+                      Waspang mode  → selalu tampil "Simpan" (tidak ada Selanjutnya)
+                      Tambah baru   → "Selanjutnya" sampai step terakhir, baru "Simpan"
+                  */}
+                  {isLastStep
+                    ? (
+                      <button
+                        onClick={handleClose}
+                        className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium"
+                      >
+                        Simpan
                       </button>
-                  }
-                  {currentStep < steps.length-1
-                    ? <button onClick={handleNext} className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium">Selanjutnya</button>
-                    : <button onClick={handleClose} className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium">Simpan</button>
+                    ) : (
+                      <button
+                        onClick={handleNext}
+                        className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium"
+                      >
+                        Selanjutnya
+                      </button>
+                    )
                   }
                 </div>
+
               </div>
             )}
           </div>

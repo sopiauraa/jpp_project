@@ -1,9 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-// ──────────────────────────────────────────────────────────────
-//  DUMMY DATA
-// ──────────────────────────────────────────────────────────────
 interface STORecord {
   sto: string; regionTif: string; area: string;
   branchFmc: string; batchProgram: string;
@@ -30,49 +27,23 @@ const SUBCON_OPTIONS = ["Subcon Alpha","Subcon Beta","PT Konstruksi Jaya","CV Ma
 const BULAN_OPTIONS  = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const BATCH_OPTIONS  = ["Batch 1","Batch 2","Batch 3"];
 
-// ──────────────────────────────────────────────────────────────
-//  TIPE DATA LOP (untuk mode isi waspang ED — dari tabel)
-// ──────────────────────────────────────────────────────────────
 export interface ExistingLOPDataED {
-  idIhld: string;
-  lop: string;
-  sto: string;
-  regionTif: string;
-  area: string;
-  branchFmc: string;
-  batchProgram: string;
-  tahun: string;
-  mitra: string;
-  subcon: string;
-  boqPlan: string;
-  cpp: string;
-  odpPlan: string;
-  projectAdmin: string;
-  portPlan: string;
-  waspangMitra: string; // readonly, hanya tampil sebagai info
+  idIhld: string; lop: string; sto: string; regionTif: string; area: string;
+  branchFmc: string; batchProgram: string; tahun: string; mitra: string; subcon: string;
+  boqPlan: string; cpp: string; odpPlan: string; projectAdmin: string; portPlan: string;
+  waspangMitra: string;
 }
 
-// ──────────────────────────────────────────────────────────────
-//  PROPS
-// ──────────────────────────────────────────────────────────────
 interface AddLopedAdminProps {
-  isOpen: boolean;
-  onClose: () => void;
-  existingData?: ExistingLOPDataED | null;
+  isOpen: boolean; onClose: () => void; existingData?: ExistingLOPDataED | null;
 }
 
 const steps = ["Identitas LOP","Data Teknisi","Progres LOP","Identitas OLT","Aktualisasi Budget"];
 
-// ──────────────────────────────────────────────────────────────
-//  PORTAL
-// ──────────────────────────────────────────────────────────────
 function Portal({ children }: { children: React.ReactNode }) {
   return ReactDOM.createPortal(children, document.body);
 }
 
-// ──────────────────────────────────────────────────────────────
-//  LABEL
-// ──────────────────────────────────────────────────────────────
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -82,9 +53,6 @@ function Label({ children, required }: { children: React.ReactNode; required?: b
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-//  READ-ONLY INPUT
-// ──────────────────────────────────────────────────────────────
 function ReadOnlyInput({ value }: { value: string }) {
   return (
     <div className="w-full flex items-center border rounded-md px-3 py-2 text-sm bg-gray-100 border-gray-200 cursor-not-allowed select-none min-h-[38px]">
@@ -93,9 +61,6 @@ function ReadOnlyInput({ value }: { value: string }) {
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-//  DROPDOWN
-// ──────────────────────────────────────────────────────────────
 function Dropdown({ value, onChange, options, placeholder = "", disabled }: {
   value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; disabled?: boolean;
 }) {
@@ -119,9 +84,9 @@ function Dropdown({ value, onChange, options, placeholder = "", disabled }: {
       <button ref={triggerRef} type="button"
         onClick={() => { if (!open && triggerRef.current) setRect(triggerRef.current.getBoundingClientRect()); setOpen(o => !o); }}
         className={`w-full flex items-center justify-between border rounded-md px-3 py-2 text-sm bg-gray-50 focus:outline-none transition
-          ${open ? "border-amber-400 ring-2 ring-amber-200" : "border-gray-200 hover:border-amber-300"}`}>
+          ${open ? "border-violet-400 ring-2 ring-violet-200" : "border-gray-200 hover:border-violet-300"}`}>
         <span className={value ? "text-gray-800" : "text-gray-400"}>{value || placeholder}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-amber-500 transition-transform ${open?"rotate-180":""}`}
+        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-violet-500 transition-transform ${open?"rotate-180":""}`}
           fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
         </svg>
@@ -133,7 +98,7 @@ function Dropdown({ value, onChange, options, placeholder = "", disabled }: {
             <div className="max-h-48 overflow-y-auto">
               {options.map(opt => (
                 <button key={opt} type="button" onClick={() => { onChange(opt); setOpen(false); }}
-                  className={`w-full text-left px-4 py-2 text-sm transition ${value===opt?"bg-amber-50 text-amber-700 font-semibold":"text-gray-700 hover:bg-amber-50 hover:text-amber-700"}`}>
+                  className={`w-full text-left px-4 py-2 text-sm transition ${value===opt?"bg-violet-50 text-violet-700 font-semibold":"text-gray-700 hover:bg-violet-50 hover:text-violet-700"}`}>
                   {opt}
                 </button>
               ))}
@@ -145,9 +110,6 @@ function Dropdown({ value, onChange, options, placeholder = "", disabled }: {
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-//  SEARCHABLE DROPDOWN
-// ──────────────────────────────────────────────────────────────
 function SearchableDropdown({ value, onChange, options, placeholder = "", disabled }: {
   value: string; onChange: (v: string) => void; options: string[]; placeholder?: string; disabled?: boolean;
 }) {
@@ -186,18 +148,18 @@ function SearchableDropdown({ value, onChange, options, placeholder = "", disabl
     <>
       {!open && (
         <button ref={triggerRef} type="button" onClick={handleOpen}
-          className="w-full flex items-center justify-between border rounded-md px-3 py-2 text-sm bg-gray-50 border-gray-200 hover:border-amber-300 focus:outline-none transition">
+          className="w-full flex items-center justify-between border rounded-md px-3 py-2 text-sm bg-gray-50 border-gray-200 hover:border-violet-300 focus:outline-none transition">
           <span className={value ? "text-gray-800" : "text-gray-400"}>{value || placeholder}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
           </svg>
         </button>
       )}
       {open && (
-        <div ref={inputWrapRef} className="w-full flex items-center border rounded-md px-3 py-2 text-sm bg-white border-amber-400 ring-2 ring-amber-200">
+        <div ref={inputWrapRef} className="w-full flex items-center border rounded-md px-3 py-2 text-sm bg-white border-violet-400 ring-2 ring-violet-200">
           <input ref={inputRef} type="text" value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Cari..." className="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400"/>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-500 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-violet-500 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
           </svg>
         </div>
@@ -211,7 +173,7 @@ function SearchableDropdown({ value, onChange, options, placeholder = "", disabl
                 ? <div className="px-4 py-3 text-sm text-gray-400 text-center">Tidak ditemukan</div>
                 : filtered.map(opt => (
                     <button key={opt} type="button" onClick={() => { onChange(opt); setOpen(false); setSearch(""); }}
-                      className={`w-full text-left px-4 py-2 text-sm transition ${value===opt?"bg-amber-50 text-amber-700 font-semibold":"text-gray-700 hover:bg-amber-50 hover:text-amber-700"}`}>
+                      className={`w-full text-left px-4 py-2 text-sm transition ${value===opt?"bg-violet-50 text-violet-700 font-semibold":"text-gray-700 hover:bg-violet-50 hover:text-violet-700"}`}>
                       {opt}
                     </button>
                   ))
@@ -224,9 +186,6 @@ function SearchableDropdown({ value, onChange, options, placeholder = "", disabl
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-//  MINI MODAL TAMBAH STATUS
-// ──────────────────────────────────────────────────────────────
 function CreateStatusModal({ isOpen, target, value, currentStatus, onChange, onSave, onClose }: {
   isOpen: boolean; target: "status"|"subStatus"|null; value: string; currentStatus: string;
   onChange: (v: string) => void; onSave: () => void; onClose: () => void;
@@ -242,17 +201,17 @@ function CreateStatusModal({ isOpen, target, value, currentStatus, onChange, onS
             {target === "status" ? "Tambah Status Baru" : "Tambah Sub Status Baru"}
           </p>
           {target === "subStatus" && (
-            <p className="text-xs text-amber-500 mb-3">untuk status: <span className="font-semibold">{currentStatus}</span></p>
+            <p className="text-xs text-violet-500 mb-3">untuk status: <span className="font-semibold">{currentStatus}</span></p>
           )}
           <input ref={inputRef} type="text" value={value} onChange={e => onChange(e.target.value)}
             onKeyDown={e => { if (e.key==="Enter") onSave(); if (e.key==="Escape") onClose(); }}
             placeholder={target==="status" ? "Nama status baru..." : "Nama sub status baru..."}
-            className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 transition"/>
+            className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 transition"/>
           <div className="flex justify-end gap-2 mt-3">
             <button type="button" onClick={onClose}
               className="px-4 py-1.5 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium">Batal</button>
             <button type="button" onClick={onSave}
-              className="px-4 py-1.5 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition font-medium">Simpan</button>
+              className="px-4 py-1.5 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium">Simpan</button>
           </div>
         </div>
       </div>
@@ -260,9 +219,6 @@ function CreateStatusModal({ isOpen, target, value, currentStatus, onChange, onS
   );
 }
 
-// ──────────────────────────────────────────────────────────────
-//  MAIN COMPONENT
-// ──────────────────────────────────────────────────────────────
 type ModalView = "choice"|"form"|"import";
 
 export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLopedAdminProps) {
@@ -299,35 +255,19 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
 
   useEffect(() => {
     if (!isOpen) return;
-
     if (isIsiWaspangMode && existingData) {
       setForm({
         ...emptyForm,
-        idIhld:       existingData.idIhld,
-        namaLop:      existingData.lop,
-        sto:          existingData.sto,
-        regionTif:    existingData.regionTif,
-        area:         existingData.area,
-        branchFmc:    existingData.branchFmc,
-        batchProgram: existingData.batchProgram,
-        tahun:        existingData.tahun,
-        mitra:        existingData.mitra,
-        subcon:       existingData.subcon,
-        boqPlan:      existingData.boqPlan,
-        cpp:          existingData.cpp,
-        odpPlan:      existingData.odpPlan,
-        projectAdmin: existingData.projectAdmin,
-        portPlan:     existingData.portPlan,
-        waspangTif:   "",
+        idIhld: existingData.idIhld, namaLop: existingData.lop, sto: existingData.sto,
+        regionTif: existingData.regionTif, area: existingData.area, branchFmc: existingData.branchFmc,
+        batchProgram: existingData.batchProgram, tahun: existingData.tahun, mitra: existingData.mitra,
+        subcon: existingData.subcon, boqPlan: existingData.boqPlan, cpp: existingData.cpp,
+        odpPlan: existingData.odpPlan, projectAdmin: existingData.projectAdmin, portPlan: existingData.portPlan,
+        waspangTif: "",
       });
-      setStoMatched(true);
-      setCurrentStep(1);
-      setView("form");
+      setStoMatched(true); setCurrentStep(1); setView("form");
     } else {
-      setForm(emptyForm);
-      setStoMatched(false);
-      setCurrentStep(0);
-      setView("choice");
+      setForm(emptyForm); setStoMatched(false); setCurrentStep(0); setView("choice");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isIsiWaspangMode]);
@@ -361,10 +301,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
 
   const handleNext = () => { if (currentStep < steps.length-1) setCurrentStep(s => s+1); };
   const handleBack = () => {
-    if (currentStep > 0) {
-      if (isIsiWaspangMode && currentStep === 1) return;
-      setCurrentStep(s => s-1);
-    }
+    if (currentStep > 0) setCurrentStep(s => s-1);
   };
 
   const handleClose = () => {
@@ -386,7 +323,10 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
     setCreateModal({ open:false, target:null, value:"" });
   };
 
-  const inputClass = "w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 transition";
+  const inputClass = "w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition";
+
+  // Di waspang mode, ini adalah step terakhir (dan satu-satunya)
+  const isLastStep = isIsiWaspangMode ? true : currentStep === steps.length - 1;
 
   if (!isOpen) return null;
 
@@ -398,51 +338,51 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
         {/* ── CHOICE ── */}
         {view === "choice" && (
           <div style={{
-            background:"linear-gradient(160deg,#fffbf5 0%,#fff7ed 50%,#ffedd5 100%)",
+            background:"linear-gradient(160deg,#faf9ff 0%,#f3f0ff 50%,#ede9fe 100%)",
             borderRadius:"20px", width:"100%", maxWidth:"360px",
             position:"relative", overflow:"hidden",
-            boxShadow:"0 8px 32px rgba(245,158,11,0.12),0 2px 8px rgba(0,0,0,0.06)",
-            border:"1px solid rgba(251,191,36,0.2)",
+            boxShadow:"0 8px 32px rgba(139,92,246,0.12),0 2px 8px rgba(0,0,0,0.06)",
+            border:"1px solid rgba(167,139,250,0.2)",
           }}>
-            <div style={{ position:"absolute",top:0,left:0,right:0,height:"3px",background:"linear-gradient(90deg,#fbbf24,#f59e0b,#fbbf24)",borderRadius:"20px 20px 0 0" }}/>
+            <div style={{ position:"absolute",top:0,left:0,right:0,height:"3px",background:"linear-gradient(90deg,#a78bfa,#7c3aed,#a78bfa)",borderRadius:"20px 20px 0 0" }}/>
             <button onClick={handleClose} style={{
               position:"absolute",top:"14px",right:"14px",width:"26px",height:"26px",borderRadius:"50%",
-              background:"rgba(245,158,11,0.08)",border:"none",display:"flex",alignItems:"center",justifyContent:"center",
+              background:"rgba(139,92,246,0.08)",border:"none",display:"flex",alignItems:"center",justifyContent:"center",
               cursor:"pointer",color:"#9ca3af",transition:"all 0.2s",
             }}
-            onMouseEnter={e=>{e.currentTarget.style.background="rgba(245,158,11,0.15)";e.currentTarget.style.color="#f59e0b";}}
-            onMouseLeave={e=>{e.currentTarget.style.background="rgba(245,158,11,0.08)";e.currentTarget.style.color="#9ca3af";}}>
+            onMouseEnter={e=>{e.currentTarget.style.background="rgba(139,92,246,0.15)";e.currentTarget.style.color="#7c3aed";}}
+            onMouseLeave={e=>{e.currentTarget.style.background="rgba(139,92,246,0.08)";e.currentTarget.style.color="#9ca3af";}}>
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12"/>
               </svg>
             </button>
             <div style={{ padding:"32px 28px 20px",textAlign:"center" }}>
-              <p style={{ color:"#431407",fontSize:"17px",fontWeight:700,letterSpacing:"-0.3px",margin:0 }}>Tambahkan LOP Baru</p>
+              <p style={{ color:"#1e1b4b",fontSize:"17px",fontWeight:700,letterSpacing:"-0.3px",margin:0 }}>Tambahkan LOP Baru</p>
               <p style={{ color:"#9ca3af",fontSize:"12px",marginTop:"5px" }}>Pilih cara input data LOP</p>
             </div>
-            <div style={{ height:"1px",background:"rgba(245,158,11,0.1)",margin:"0 28px" }}/>
+            <div style={{ height:"1px",background:"rgba(139,92,246,0.1)",margin:"0 28px" }}/>
             <div style={{ padding:"20px 28px 28px",display:"flex",flexDirection:"column",gap:"10px" }}>
               {[
                 { label:"Isi Form LOP", desc:"Input manual langkah demi langkah", icon:<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>, action:()=>setView("form") },
                 { label:"Import Data LOP", desc:"Upload file Excel sekaligus", icon:<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 8l-5-5-5 5M12 3v12"/>, action:()=>setView("import") },
               ].map(item => (
                 <button key={item.label} onClick={item.action} style={{
-                  width:"100%",padding:"0",border:"1px solid rgba(245,158,11,0.15)",
+                  width:"100%",padding:"0",border:"1px solid rgba(139,92,246,0.15)",
                   borderRadius:"12px",cursor:"pointer",overflow:"hidden",
                   background:"white",transition:"all 0.18s",textAlign:"left",
                   boxShadow:"0 1px 4px rgba(0,0,0,0.04)",
                 }}
-                onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(245,158,11,0.4)";e.currentTarget.style.boxShadow="0 4px 16px rgba(245,158,11,0.12)";e.currentTarget.style.transform="translateY(-1px)";}}
-                onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(245,158,11,0.15)";e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)";e.currentTarget.style.transform="translateY(0)";}}>
+                onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(124,58,237,0.4)";e.currentTarget.style.boxShadow="0 4px 16px rgba(124,58,237,0.12)";e.currentTarget.style.transform="translateY(-1px)";}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(139,92,246,0.15)";e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)";e.currentTarget.style.transform="translateY(0)";}}>
                   <div style={{ display:"flex",alignItems:"center",gap:"12px",padding:"14px 16px" }}>
-                    <div style={{ width:"36px",height:"36px",borderRadius:"9px",flexShrink:0,background:"linear-gradient(135deg,#fef3c7,#fde68a)",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#f59e0b">{item.icon}</svg>
+                    <div style={{ width:"36px",height:"36px",borderRadius:"9px",flexShrink:0,background:"linear-gradient(135deg,#ede9fe,#ddd6fe)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#7c3aed">{item.icon}</svg>
                     </div>
                     <div style={{ flex:1 }}>
-                      <p style={{ color:"#431407",fontSize:"13px",fontWeight:600,margin:0 }}>{item.label}</p>
+                      <p style={{ color:"#1e1b4b",fontSize:"13px",fontWeight:600,margin:0 }}>{item.label}</p>
                       <p style={{ color:"#9ca3af",fontSize:"11px",marginTop:"2px" }}>{item.desc}</p>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#fcd34d">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c4b5fd">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                     </svg>
                   </div>
@@ -486,7 +426,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                 <div className="flex-1 border border-dashed border-gray-300 rounded-xl p-5 mt-3 flex flex-col items-center justify-center gap-4">
                   <div className="flex flex-col items-center gap-2 text-center">
                     <p className="text-xs text-gray-500">Download Template Excel <span className="text-gray-400">*optional</span></p>
-                    <button type="button" className="flex items-center gap-2 px-5 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 text-sm font-medium rounded-lg transition">
+                    <button type="button" className="flex items-center gap-2 px-5 py-2 bg-violet-100 hover:bg-violet-200 text-violet-700 text-sm font-medium rounded-lg transition">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
                       </svg>
@@ -496,7 +436,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                   <div className="w-full border-t border-gray-200"/>
                   <div className="flex flex-col items-center gap-2">
                     <p className="text-xs text-gray-500">Upload Data LOP</p>
-                    <label className="flex items-center gap-2 px-5 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 text-sm font-medium rounded-lg transition cursor-pointer">
+                    <label className="flex items-center gap-2 px-5 py-2 bg-violet-100 hover:bg-violet-200 text-violet-700 text-sm font-medium rounded-lg transition cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 8l-5-5-5 5M12 3v12"/>
                       </svg>
@@ -507,7 +447,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                 </div>
                 <div className="flex justify-end gap-3 mt-4 flex-shrink-0">
                   <button onClick={() => setView("choice")} className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium">Batal</button>
-                  <button onClick={handleClose} className="px-6 py-2 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition font-medium">Simpan</button>
+                  <button onClick={handleClose} className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium">Simpan</button>
                 </div>
               </div>
             )}
@@ -517,24 +457,20 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
               <div className="flex-1 flex flex-col px-8 pb-5 min-h-0">
                 <div className="relative border border-gray-200 rounded-xl pt-9 px-6 pb-4 mt-4 flex-1 flex flex-col min-h-0">
                   <div className="absolute -top-4 left-6">
-                    <span className="bg-amber-500 text-white text-sm font-semibold px-5 py-2 rounded-lg block shadow-sm">
+                    <span className="bg-violet-500 text-white text-sm font-semibold px-5 py-2 rounded-lg block shadow-sm">
                       {steps[currentStep]}
                     </span>
                   </div>
 
                   <div className="flex-1 overflow-y-auto pr-1">
 
-                    {/* ── STEP 1: Identitas LOP ── */}
-                    {currentStep === 0 && (
+                    {/* Step 0: hanya untuk mode tambah LOP biasa */}
+                    {currentStep === 0 && !isIsiWaspangMode && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                        <div><Label required>Tahun</Label>
-                          <input name="tahun" value={form.tahun} onChange={handleChange} className={inputClass}/></div>
-                        <div><Label required>ID - IHLD</Label>
-                          <input name="idIhld" value={form.idIhld} onChange={handleChange} className={inputClass}/></div>
-                        <div><Label required>STO</Label>
-                          <input name="sto" value={form.sto} onChange={handleStoChange} placeholder="Ketik STO (mis. MES, JKT)" className={inputClass}/></div>
-                        <div><Label required>Nama LOP</Label>
-                          <input name="namaLop" value={form.namaLop} onChange={handleChange} className={inputClass}/></div>
+                        <div><Label required>Tahun</Label><input name="tahun" value={form.tahun} onChange={handleChange} className={inputClass}/></div>
+                        <div><Label required>ID - IHLD</Label><input name="idIhld" value={form.idIhld} onChange={handleChange} className={inputClass}/></div>
+                        <div><Label required>STO</Label><input name="sto" value={form.sto} onChange={handleStoChange} placeholder="Ketik STO (mis. MES, JKT)" className={inputClass}/></div>
+                        <div><Label required>Nama LOP</Label><input name="namaLop" value={form.namaLop} onChange={handleChange} className={inputClass}/></div>
                         <div><Label required>Region FMC</Label><ReadOnlyInput value={form.regionTif}/></div>
                         <div><Label required>Area</Label><ReadOnlyInput value={form.area}/></div>
                         <div><Label required>Branch FMC</Label><ReadOnlyInput value={form.branchFmc}/></div>
@@ -547,57 +483,40 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                       </div>
                     )}
 
-                    {/* ── STEP 2: Data Teknisi ── */}
+                    {/* Step 1: tampil di kedua mode, tapi di waspang mode hanya field waspang yg bisa diisi */}
                     {currentStep === 1 && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><Label required>Mitra</Label>
-                          <SearchableDropdown value={form.mitra} onChange={set("mitra")}
-                            options={MITRA_OPTIONS} placeholder="Pilih Mitra" disabled={isIsiWaspangMode}/></div>
+                          <SearchableDropdown value={form.mitra} onChange={set("mitra")} options={MITRA_OPTIONS} placeholder="Pilih Mitra" disabled={isIsiWaspangMode}/></div>
                         <div><Label required>Subcon</Label>
-                          <SearchableDropdown value={form.subcon} onChange={set("subcon")}
-                            options={SUBCON_OPTIONS} placeholder="Pilih Subcon" disabled={isIsiWaspangMode}/></div>
+                          <SearchableDropdown value={form.subcon} onChange={set("subcon")} options={SUBCON_OPTIONS} placeholder="Pilih Subcon" disabled={isIsiWaspangMode}/></div>
                         <div><Label required>BoQ Plan</Label>
-                          {isIsiWaspangMode
-                            ? <ReadOnlyInput value={form.boqPlan}/>
-                            : <input name="boqPlan" value={form.boqPlan} onChange={handleChange} className={inputClass}/>}
+                          {isIsiWaspangMode ? <ReadOnlyInput value={form.boqPlan}/> : <input name="boqPlan" value={form.boqPlan} onChange={handleChange} className={inputClass}/>}
                         </div>
                         <div><Label required>CPP</Label>
-                          {isIsiWaspangMode
-                            ? <ReadOnlyInput value={form.cpp}/>
-                            : <input name="cpp" value={form.cpp} onChange={handleChange} className={inputClass}/>}
+                          {isIsiWaspangMode ? <ReadOnlyInput value={form.cpp}/> : <input name="cpp" value={form.cpp} onChange={handleChange} className={inputClass}/>}
                         </div>
-
-                        {/* ─ WASPANG TIF: ini yang diisi ED ─ */}
                         <div className={isIsiWaspangMode ? "col-span-2 bg-amber-50 border border-amber-200 rounded-lg p-3" : ""}>
-                          {isIsiWaspangMode && (
-                            <p className="text-xs font-semibold text-amber-700 mb-2">Isi Waspang ED (TIF) di sini</p>
-                          )}
+                          {isIsiWaspangMode && <p className="text-xs font-semibold text-amber-700 mb-2">Isi Waspang ED (TIF) di sini</p>}
                           <Label required>Waspang ED (TIF)</Label>
                           <input name="waspangTif" value={form.waspangTif} onChange={handleChange}
                             placeholder="Nama waspang ED..."
                             className={`${inputClass} ${isIsiWaspangMode ? "border-amber-300 focus:ring-amber-300 focus:border-amber-400 bg-white" : ""}`}/>
                         </div>
-
                         <div><Label required>ODP Plan</Label>
-                          {isIsiWaspangMode
-                            ? <ReadOnlyInput value={form.odpPlan}/>
-                            : <input name="odpPlan" value={form.odpPlan} onChange={handleChange} className={inputClass}/>}
+                          {isIsiWaspangMode ? <ReadOnlyInput value={form.odpPlan}/> : <input name="odpPlan" value={form.odpPlan} onChange={handleChange} className={inputClass}/>}
                         </div>
                         <div><Label required>Project Admin</Label>
-                          {isIsiWaspangMode
-                            ? <ReadOnlyInput value={form.projectAdmin}/>
-                            : <input name="projectAdmin" value={form.projectAdmin} onChange={handleChange} className={inputClass}/>}
+                          {isIsiWaspangMode ? <ReadOnlyInput value={form.projectAdmin}/> : <input name="projectAdmin" value={form.projectAdmin} onChange={handleChange} className={inputClass}/>}
                         </div>
                         <div><Label required>Port Plan</Label>
-                          {isIsiWaspangMode
-                            ? <ReadOnlyInput value={form.portPlan}/>
-                            : <input name="portPlan" value={form.portPlan} onChange={handleChange} className={inputClass}/>}
+                          {isIsiWaspangMode ? <ReadOnlyInput value={form.portPlan}/> : <input name="portPlan" value={form.portPlan} onChange={handleChange} className={inputClass}/>}
                         </div>
                       </div>
                     )}
 
-                    {/* ── STEP 3: Progres LOP ── */}
-                    {currentStep === 2 && (
+                    {/* Step 2, 3, 4: hanya untuk mode tambah LOP biasa */}
+                    {currentStep === 2 && !isIsiWaspangMode && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3 items-start">
                         <div>
                           <Label required>Status</Label>
@@ -606,7 +525,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                               <SearchableDropdown value={form.status} onChange={handleStatusChange} options={allStatusOptions} placeholder="Pilih status"/>
                             </div>
                             <button type="button" onClick={() => setCreateModal({ open:true, target:"status", value:"" })}
-                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-md border border-amber-400 bg-amber-50 text-amber-600 text-lg font-medium hover:bg-amber-100 transition">+</button>
+                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-md border border-violet-400 bg-violet-50 text-violet-600 text-lg font-medium hover:bg-violet-100 transition">+</button>
                           </div>
                         </div>
                         <div>
@@ -616,7 +535,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                               <SearchableDropdown value={form.subStatus} onChange={set("subStatus")} options={subStatusOptions} placeholder="Pilih sub status"/>
                             </div>
                             <button type="button" onClick={() => setCreateModal({ open:true, target:"subStatus", value:"" })}
-                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-md border border-amber-400 bg-amber-50 text-amber-600 text-lg font-medium hover:bg-amber-100 transition">+</button>
+                              className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-md border border-violet-400 bg-violet-50 text-violet-600 text-lg font-medium hover:bg-violet-100 transition">+</button>
                           </div>
                         </div>
                         <div>
@@ -626,12 +545,12 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                         <div className="col-span-2">
                           <Label>Detail Status</Label>
                           <textarea name="detailStatus" value={form.detailStatus} onChange={handleChange} rows={2}
-                            className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 resize-none transition"/>
+                            className="w-full border border-gray-200 bg-gray-50 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 resize-none transition"/>
                         </div>
                         {isGolive && (
                           <div className="col-span-2">
-                            <div className="border border-amber-200 bg-amber-50 rounded-lg px-4 pt-3 pb-2">
-                              <p className="text-xs font-semibold text-amber-600 mb-2 uppercase tracking-wide">Data Golive</p>
+                            <div className="border border-violet-200 bg-violet-50 rounded-lg px-4 pt-3 pb-2">
+                              <p className="text-xs font-semibold text-violet-600 mb-2 uppercase tracking-wide">Data Golive</p>
                               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                                 <div className="col-span-2"><Label>Tanggal Golive</Label>
                                   <input type="date" name="tanggalGolive" value={form.tanggalGolive} onChange={handleChange} className={inputClass}/></div>
@@ -646,8 +565,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                       </div>
                     )}
 
-                    {/* ── STEP 4: Identitas OLT ── */}
-                    {currentStep === 3 && (
+                    {currentStep === 3 && !isIsiWaspangMode && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3 items-start">
                         <div className="flex flex-col gap-3">
                           <div><Label>PID</Label><input name="pid" value={form.pid} onChange={handleChange} className={inputClass}/></div>
@@ -660,23 +578,23 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                             <Label>OLT</Label>
                             <div className="flex rounded-md overflow-hidden border border-gray-200 w-full">
                               <button type="button" onClick={() => { setForm(f=>({...f,olt:"Need"})); setShowOltExtra(true); }}
-                                className={`flex-1 py-2 text-sm font-medium transition ${form.olt==="Need"?"bg-amber-500 text-white":"bg-gray-50 text-gray-500 hover:bg-amber-50 hover:text-amber-600"}`}>Need</button>
+                                className={`flex-1 py-2 text-sm font-medium transition ${form.olt==="Need"?"bg-violet-500 text-white":"bg-gray-50 text-gray-500 hover:bg-violet-50 hover:text-violet-600"}`}>Need</button>
                               <button type="button" onClick={() => { setForm(f=>({...f,olt:"No Need"})); setShowOltExtra(false); }}
-                                className={`flex-1 py-2 text-sm font-medium transition ${form.olt==="No Need"?"bg-amber-500 text-white":"bg-gray-50 text-gray-500 hover:bg-amber-50 hover:text-amber-600"}`}>No Need</button>
+                                className={`flex-1 py-2 text-sm font-medium transition ${form.olt==="No Need"?"bg-violet-500 text-white":"bg-gray-50 text-gray-500 hover:bg-violet-50 hover:text-violet-600"}`}>No Need</button>
                             </div>
                           </div>
                           {showOltExtra && (
                             <div className="border border-gray-200 rounded-lg p-3 bg-gray-50 grid grid-cols-2 gap-3">
                               <div className="flex flex-col items-center gap-1.5 text-center">
                                 <p className="text-xs text-gray-500">Download Excel</p>
-                                <button type="button" className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-700 text-xs font-medium rounded-md transition">
+                                <button type="button" className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-100 hover:bg-violet-200 text-violet-700 text-xs font-medium rounded-md transition">
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
                                   excel olt
                                 </button>
                               </div>
                               <div className="flex flex-col items-center gap-1.5 text-center">
                                 <p className="text-xs text-gray-500">Upload Data OLT</p>
-                                <label className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-700 text-xs font-medium rounded-md transition cursor-pointer">
+                                <label className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-100 hover:bg-violet-200 text-violet-700 text-xs font-medium rounded-md transition cursor-pointer">
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 8l-5-5-5 5M12 3v12"/></svg>
                                   upload olt
                                   <input type="file" accept=".xlsx,.xls" className="hidden"/>
@@ -688,8 +606,7 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                       </div>
                     )}
 
-                    {/* ── STEP 5: Aktualisasi Budget ── */}
-                    {currentStep === 4 && (
+                    {currentStep === 4 && !isIsiWaspangMode && (
                       <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                         <div><Label>Nilai PRELIM</Label><input name="nilaiPrelim" value={form.nilaiPrelim} onChange={handleChange} className={inputClass}/></div>
                         <div><Label>CPP Akhir</Label><input name="cppAkhir" value={form.cppAkhir} onChange={handleChange} className={inputClass}/></div>
@@ -733,20 +650,22 @@ export default function AddLopedAdmin({ isOpen, onClose, existingData }: AddLope
                       </div>
                     )}
 
-                  </div>{/* end scroll */}
-                </div>{/* end inner box */}
+                  </div>
+                </div>
 
-                {/* Footer nav */}
+                {/* ── FOOTER NAV ── */}
                 <div className="flex justify-end gap-3 mt-3 flex-shrink-0">
-                  {currentStep > 0 && !(isIsiWaspangMode && currentStep === 1)
-                    ? <button onClick={handleBack} className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium">Kembali</button>
-                    : <button onClick={isIsiWaspangMode ? handleClose : () => setView("choice")} className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium">
-                        {isIsiWaspangMode ? "Batal" : "Kembali"}
-                      </button>
-                  }
-                  {currentStep < steps.length-1
-                    ? <button onClick={handleNext} className="px-6 py-2 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition font-medium">Selanjutnya</button>
-                    : <button onClick={handleClose} className="px-6 py-2 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition font-medium">Simpan</button>
+                  <button
+                    onClick={isIsiWaspangMode ? handleClose : (currentStep > 0 ? handleBack : () => setView("choice"))}
+                    className="px-6 py-2 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition font-medium"
+                  >
+                    {isIsiWaspangMode ? "Batal" : currentStep > 0 ? "Kembali" : "Kembali"}
+                  </button>
+
+                  {/* Waspang mode → langsung Simpan. Mode biasa → Selanjutnya sampai step terakhir baru Simpan */}
+                  {isLastStep
+                    ? <button onClick={handleClose} className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium">Simpan</button>
+                    : <button onClick={handleNext} className="px-6 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition font-medium">Selanjutnya</button>
                   }
                 </div>
               </div>
